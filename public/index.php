@@ -37,17 +37,18 @@
         <a href="#">Winkels</a>
     </nav>
 
-    <!--BANNER -->
+    <!-- BANNER -->
     <section class="banner">
-        <img src="img/banner.jpg" alt="Banner">
+        <img src="../img/banner.jpg" alt="Banner">
     </section>
 
-    <!-- FOTOS-->
+    <!-- FOTOS -->
     <section class="photos">
-        <div class="photo"><img src="img/scooter-vesuvio.jpg"></div>
-        <div class="photo"><img src="img/photo2.jpg"></div>
-        <div class="photo"><img src="img/photo3.jpg"></div>
+        <div class="photo"><img src="../img/scooter-vesuvio.jpg"></div>
+        <div class="photo"><img src="../img/photo2.jpg"></div>
+        <div class="photo"><img src="../img/photo3.jpg"></div>
     </section>
 
 </body>
 </html>
+
