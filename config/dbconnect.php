@@ -1,33 +1,35 @@
-<?php  
-$db = new Database();
-$conn = $db->connect();
-
-$stmt = $conn->query("SELECT * FROM users");
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-print_r($result);
-
+<?php
+echo "PHP is running<br>";
 
 class Database {
     private $host = "localhost";
-    private $dbname = "oop";
-    private $username = "root";
-    private $password = "";
-    public $conn;
+    private $db = "vesuvio";
+    private $user = "root";
+    private $pass = "";
+    private $conn;
 
     public function connect() {
         try {
-            $this->conn = new PDO(
-                "mysql:host=" . $this->host . ";dbname=" . $this->dbname,
-                $this->username,
-                $this->password
-            );
+            if ($this->conn == null) {
+                $dsn = "mysql:host={$this->host};dbname={$this->db};charset=utf8mb4";
+                $this->conn = new PDO($dsn, $this->user, $this->pass);
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $this->conn;
-
+                echo "Connection successful!";
+            }
         } catch (PDOException $e) {
-            echo "Fout bij verbinden: " . $e->getMessage();
+            echo "Connection failed: " . $e->getMessage();
         }
+
+        return $this->conn;
     }
 }
+
+$db = new Database();
+$conn = $db->connect();
+
+
+
+
+?>
+
