@@ -1,52 +1,36 @@
 <?php
 require 'dbconnect.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
     // Check if username already exists
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->bind_result($count);
-    $stmt->fetch();
+    $checkStmt = $conn->prepare(
+        "SELECT COUNT(*) FROM users WHERE username = :username"
+    );
+    $checkStmt->execute(['username' => $username]);
+    $count = $checkStmt->fetchColumn();
 
     if ($count > 0) {
         echo "⚠️ Username already exists.";
     } else {
         // Insert new user
-        $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        $stmt->bind_param("ss", $username, $password);
+        $insertStmt = $conn->prepare(
+            "INSERT INTO users (username, password) VALUES (:username, :password)"
+        );
 
-        if ($stmt->execute()) {
+        if ($insertStmt->execute([
+            'username' => $username,
+            'password' => $password
+        ])) {
             echo "✅ Registration successful! <a href='login.php'>Login</a>";
         } else {
             echo "⚠️ Something went wrong.";
         }
     }
-
-    $stmt->close();
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="form-container">
-    <h2>Register</h2>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Username" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="login.php">Login</a></p>
-</div>
-</body>
-</html>
 
 
