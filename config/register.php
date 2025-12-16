@@ -5,13 +5,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-    $stmt->bind_param("ss", $username, $password);
+    // Check if username already exists
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
 
-    if ($stmt->execute()) {
-        echo "✅ Registration successful! <a href='login.php'>Login</a>";
-    } else {
+    if ($count > 0) {
         echo "⚠️ Username already exists.";
+    } else {
+        // Insert new user
+        $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+        $stmt->bind_param("ss", $username, $password);
+
+        if ($stmt->execute()) {
+            echo "✅ Registration successful! <a href='login.php'>Login</a>";
+        } else {
+            echo "⚠️ Something went wrong.";
+        }
     }
 
     $stmt->close();
