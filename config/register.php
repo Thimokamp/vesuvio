@@ -23,7 +23,7 @@
 </html>
 
 <?php
-require 'config/dbconnect.php';
+require 'dbconnect.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $naam = $_POST['naam'];
