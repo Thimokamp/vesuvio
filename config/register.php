@@ -1,36 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="POST">
+    <input type="text" name="naam" placeholder="Gebruikersnaam" required>
+    <input type="password" name="password" placeholder="Wachtwoord" required>
+
+    <select name="role" required>
+        <option value="management">Management</option>
+        <option value="magazijn">Magazijn</option>
+        <option value="verzending">Verzending</option>
+    </select>
+
+    <button type="submit">Registreren</button>
+</form>
+
+</body>
+</html>
+
 <?php
-require 'dbconnect.php';
+require 'config/dbconnect.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = trim($_POST['username']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $naam = $_POST['naam'];
+    $wachtwoord = password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT);
+    $role = $_POST['role'];
 
-    // Check if username already exists
-    $checkStmt = $conn->prepare(
-        "SELECT COUNT(*) FROM users WHERE username = :username"
+    $stmt = $conn->prepare(
+        "INSERT INTO users (naam, wachtwoord, role) VALUES (:u, :p, :r)"
     );
-    $checkStmt->execute(['username' => $username]);
-    $count = $checkStmt->fetchColumn();
 
-    if ($count > 0) {
-        echo "⚠️ Username already exists.";
-    } else {
-        // Insert new user
-        $insertStmt = $conn->prepare(
-            "INSERT INTO users (username, password) VALUES (:username, :password)"
-        );
+    $stmt->execute([
+        ':u' => $naam,
+        ':p' => $wachtwoord,
+        ':r' => $role
+    ]);
 
-        if ($insertStmt->execute([
-            'username' => $username,
-            'password' => $password
-        ])) {
-            echo "✅ Registration successful! <a href='login.php'>Login</a>";
-        } else {
-            echo "⚠️ Something went wrong.";
-        }
-    }
+    echo "Gebruiker geregistreerd";
 }
-?>
+
 
 
 
