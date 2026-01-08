@@ -1,4 +1,5 @@
 <?php
+
 class Database {
     private $host = "localhost";
     private $db = "vesuvio";
@@ -21,23 +22,27 @@ class Database {
     }
 }
 
-
 $db = new Database();
 $conn = $db->connect();
 
-$sql = "SELECT id, naam, wachtwoord FROM users";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-  // output data of each row
-  while($row = $result->fetch_assoc()) {
-    echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-  }
+if ($conn) {
+    echo " Database verbinding gelukt!";
 } else {
-  echo "0 results";
+    echo " Verbinding mislukt";
 }
 
 
+$sql = "SELECT id, naam,wachtwoord FROM users";
+$stmt = $conn->query($sql);
 
-?>
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (count($rows) > 0) {
+    foreach ($rows as $row) {
+        echo "id: " . $row["id"] . " - Naam: " . $row["naam"] . "<br>";
+    }
+} else {
+    echo "0 results";
+}
+
 
