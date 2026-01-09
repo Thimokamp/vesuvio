@@ -8,7 +8,7 @@ SELECT
     c.name,
     c.email
 FROM orders o
-JOIN customers c ON o.customer_id = c.id
+JOIN klanten c ON o.klant_id = c.id
 ORDER BY o.order_date DESC
 ";
 
